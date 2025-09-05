@@ -1,4 +1,5 @@
 import 'package:findjobs/features/shared/components/components.dart';
+import 'package:findjobs/features/shared/helpers/helpers.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class SignupScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            spacing: 20,
+            spacing: 25,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomText("te.", fontSize: 90),
@@ -37,10 +38,7 @@ class SignupScreen extends StatelessWidget {
                 prefixIcon: Icon(Icons.security_rounded),
               ),
 
-              TextButton(
-                onPressed: () {},
-                child: CustomText("Forgot Password?"),
-              ),
+              15.height,
               FilledButton(onPressed: () {}, child: CustomText('Sign Up')),
             ],
           ),
@@ -52,7 +50,7 @@ class SignupScreen extends StatelessWidget {
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({super.key, required this.label, this.prefixIcon});
-  final String label;
+  final String? label;
   final Widget? prefixIcon;
 
   @override

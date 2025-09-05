@@ -1,12 +1,15 @@
-import 'package:findjobs/configs/theme/app_theme.dart';
-import 'package:findjobs/features/auth/ui/screens/intro_screen/intro_screen.dart';
-import 'package:findjobs/features/auth/ui/screens/signin_screen/siginin_screen.dart';
-import 'package:findjobs/features/auth/ui/screens/signup_screen/signup_screen.dart';
-import 'package:findjobs/features/auth/ui/screens/splash_screen/splash_screen.dart';
+import 'dart:developer';
+
+import 'package:findjobs/configs/configs.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
+
+  await Environment.initEnvironment();
+
+  log(Environment.apiUrl);
 }
 
 class MyApp extends StatelessWidget {
@@ -15,11 +18,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'te.',
       debugShowCheckedModeBanner: false,
       theme: AppTheme().getTheme(true),
-      home: SignupScreen(),
+      routerConfig: router,
     );
   }
 }

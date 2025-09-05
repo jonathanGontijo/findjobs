@@ -1,4 +1,5 @@
 import 'package:findjobs/features/shared/components/custom_text.dart';
+import 'package:findjobs/features/shared/helpers/extensions/sizedbox_extension.dart';
 import 'package:flutter/material.dart';
 
 class IntroScreen extends StatelessWidget {
@@ -21,10 +22,9 @@ class IntroScreen extends StatelessWidget {
                 label: CustomText("Create an Account"),
                 icon: Icon(Icons.add_circle_outline_outlined),
               ),
-              SizedBox(height: 30),
-
+              30.height,
               TextButton(onPressed: () {}, child: CustomText("Sign In")),
-              SizedBox(height: 30),
+              30.height,
             ],
           ),
         ),

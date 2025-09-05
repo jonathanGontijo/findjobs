@@ -40,7 +40,7 @@ class SigininScreen extends StatelessWidget {
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({super.key, required this.label, this.prefixIcon});
-  final String label;
+  final String? label;
   final Widget? prefixIcon;
 
   @override
