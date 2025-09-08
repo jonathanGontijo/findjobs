@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:findjobs/core/core.dart';
@@ -14,14 +16,18 @@ class HttpClientImpl implements HttpClient {
   }) async {
     try {
       final response = await _dio.post(url, data: data);
+
+      log("${response.data}");
       return Right(fromJson(response.data));
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
-      final serverMessage = e.response?.data['message'];
+      final serverMessage = e.response?.data['message'].toString();
 
       final errorMessage = _mapDioErrorToMessage(e, serverMessage);
+      log("$errorMessage code: $statusCode");
       return Left(Failure(message: errorMessage, code: statusCode));
     } catch (e) {
+      log("$e");
       return Left(Failure(message: "Unexpected error"));
     }
   }

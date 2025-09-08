@@ -5,7 +5,7 @@ import 'package:findjobs/features/auth/domain/repositories/login_repository.dart
 
 import '../../../../core/core.dart';
 
-abstract class LoginUsecase {
+class LoginUsecase {
   final LoginRepository repository;
 
   LoginUsecase(this.repository);
