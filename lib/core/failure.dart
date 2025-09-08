@@ -1,6 +1,6 @@
 class Failure {
   final String message;
-  final int code;
+  final int? code;
 
-  Failure({required this.message, required this.code});
+  Failure({required this.message, this.code});
 }
