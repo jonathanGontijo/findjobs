@@ -29,7 +29,7 @@ class AppTheme {
     primaryColorLight: primaryColorLight,
     cardColor: isDarkTheme ? whiteColor : blackColor,
     primaryTextTheme: Typography.whiteRedmond,
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: isDarkTheme ? cardDarkColor : whiteColor,
       surfaceTintColor: !isDarkTheme ? cardDarkColor : whiteColor,
     ),
@@ -105,7 +105,7 @@ class AppTheme {
       color: Colors.white,
     ),
 
-    dialogTheme: const DialogTheme(
+    dialogTheme: const DialogThemeData(
       surfaceTintColor: whiteColor,
       backgroundColor: whiteColor,
     ),
