@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Environment {
@@ -5,5 +7,8 @@ class Environment {
     await dotenv.load(fileName: ".env");
   }
 
-  static String apiUrl = dotenv.env['API_URL'] ?? 'No key';
+  static String apiUrl =
+      Platform.isAndroid
+          ? dotenv.env["ANDROID_API_URL"] ?? 'No key'
+          : dotenv.env['API_URL'] ?? 'No key';
 }

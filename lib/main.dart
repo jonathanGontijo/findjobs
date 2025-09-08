@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:findjobs/configs/configs.dart';
-import 'package:findjobs/core/core.dart';
 import 'package:findjobs/features/auth/data/datasources/login_datasource_impl.dart';
 import 'package:findjobs/features/auth/data/repositories/login_repository_impl.dart';
 import 'package:findjobs/features/auth/domain/usecases/login_usecase.dart';
