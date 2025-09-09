@@ -20,10 +20,7 @@ final router = GoRouter(
       path: introScreen,
       builder: (context, state) => const IntroScreen(),
     ),
-    GoRoute(
-      path: signInScreen,
-      builder: (context, state) => const SigininScreen(),
-    ),
+    GoRoute(path: signInScreen, builder: (context, state) => SigininScreen()),
     GoRoute(
       path: signUpScreen,
       builder: (context, state) => const SignupScreen(),
