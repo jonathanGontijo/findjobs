@@ -1,9 +1,11 @@
 import 'dart:developer';
 
+import 'package:findjobs/configs/router/app_router.dart';
 import 'package:findjobs/core/failure.dart';
 import 'package:findjobs/features/auth/domain/entities/entities.dart';
 import 'package:findjobs/features/auth/domain/usecases/login_usecase.dart';
 import 'package:findjobs/features/auth/presentation/providers/login_repository_proivder.dart';
+import 'package:findjobs/features/auth/presentation/ui/helpers/messages.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/helpers/helpers.dart';
@@ -52,8 +54,9 @@ class Authentication extends _$Authentication {
     final result = await loginUsecase(params);
 
     result.fold(
-      (failure) => log('falha ao logar: ${failure.message}'),
-      (user) => log('Logado com sucesso: ${user.name}'),
+      (failure) =>
+          MessagesService.showCustomSnackBar(failure.message, error: true),
+      (user) => ref.read(appRouterProvider).push(homeScreen),
     );
 
     state = AsyncData(state.value!.copyWith(isLoading: false));
