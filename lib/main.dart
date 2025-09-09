@@ -7,12 +7,13 @@ import 'package:findjobs/features/auth/data/repositories/login_repository_impl.d
 import 'package:findjobs/features/auth/domain/usecases/login_usecase.dart';
 import 'package:findjobs/features/shared/infrastruture/http_client_impl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'features/auth/domain/helpers/helpers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 
   await Environment.initEnvironment();
 
