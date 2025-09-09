@@ -9,14 +9,8 @@ String? validateEmail(String? email) {
 }
 
 String? validatePassword(String? password) {
-  if (password == null || password.isEmpty) {
-    return "Password is required";
-  }
-  if (!password.contains(" ")) {
-    return "Invalid Password";
-  }
-  if (password.length < 6) {
-    return "Password must be at least 6 characters";
-  }
+  if (password!.isEmpty) return "Password is required";
+  if (password.contains(" ")) return "Invalid Password";
+  if (password.length < 6) return "Password must be at least 6 characters";
   return null;
 }

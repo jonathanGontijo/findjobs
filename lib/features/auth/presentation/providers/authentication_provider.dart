@@ -24,6 +24,20 @@ class AuthenticationState {
     this.failure,
     this.authStatus = AuthStatus.checking,
   });
+
+  AuthenticationState copyWith({
+    bool? isLoading,
+    UserEntity? userEntity,
+    Failure? failure,
+    AuthStatus? authStatus,
+  }) {
+    return AuthenticationState(
+      isLoading: isLoading ?? this.isLoading,
+      userEntity: userEntity ?? this.userEntity,
+      failure: failure ?? this.failure,
+      authStatus: authStatus ?? this.authStatus,
+    );
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -32,6 +46,7 @@ class Authentication extends _$Authentication {
   FutureOr<AuthenticationState> build() => AuthenticationState();
 
   Future<void> login(AuthenticationParams params) async {
+    state = AsyncData(state.value!.copyWith(isLoading: true));
     final loginUsecase = LoginUsecase(ref.read(loginRepositoryProvider));
 
     final result = await loginUsecase(params);
@@ -40,5 +55,7 @@ class Authentication extends _$Authentication {
       (failure) => log('falha ao logar: ${failure.message}'),
       (user) => log('Logado com sucesso: ${user.name}'),
     );
+
+    state = AsyncData(state.value!.copyWith(isLoading: false));
   }
 }

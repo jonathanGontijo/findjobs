@@ -7,15 +7,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../shared/components/custom_text_form_field.dart';
 import '../../helpers/helpers.dart';
 
-class SigininScreen extends ConsumerWidget {
-  SigininScreen({super.key});
+class SigininScreen extends ConsumerStatefulWidget {
+  const SigininScreen({super.key});
 
+  @override
+  ConsumerState<SigininScreen> createState() => _SigininScreenState();
+}
+
+class _SigininScreenState extends ConsumerState<SigininScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final loginParams = AuthenticationParams(email: "", secret: "");
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign In')),
       body: SingleChildScrollView(
@@ -49,12 +54,15 @@ class SigininScreen extends ConsumerWidget {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      print(loginParams.email);
-                      print(loginParams.secret);
+                      ref
+                          .read(authenticationProvider.notifier)
+                          .login(loginParams);
                     }
-                    //  ref.read(authenticationProvider.notifier).login();
                   },
-                  child: CustomText('Sign In'),
+                  child:
+                      ref.watch(authenticationProvider).value!.isLoading
+                          ? CircularProgressIndicator()
+                          : CustomText('Sign In'),
                 ),
               ],
             ),
