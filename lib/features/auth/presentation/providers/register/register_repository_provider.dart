@@ -1,4 +1,5 @@
 import 'package:findjobs/features/auth/domain/repositories/register_repository.dart';
+import 'package:findjobs/features/auth/presentation/factories/cache/secure_storage_adapter_factory.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,6 +12,9 @@ part 'register_repository_provider.g.dart';
 @riverpod
 RegisterRepository registerRepository(Ref ref) {
   return RegisterRepositoryImpl(
-    (RegisterDatasourceImpl(ref.read(httpClientProvider))),
+    RegisterDatasourceImpl(
+      httpClient: ref.read(httpClientProvider),
+      secureStorageAdapter: makeSecureStorageAdapter(),
+    ),
   );
 }

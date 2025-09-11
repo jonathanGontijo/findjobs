@@ -12,13 +12,13 @@ class HttpClientImpl implements HttpClient {
   Future<Either<Failure, T>> post<T>({
     required String url,
     required Map<String, dynamic> data,
-    required T Function(dynamic json) fromJson,
+    required Future<T> Function(dynamic json) fromJson,
   }) async {
     try {
       final response = await _dio.post(url, data: data);
 
       log("${response.data}");
-      return Right(fromJson(response.data));
+      return Right(await fromJson(response.data));
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       final serverMessage = e.response?.data['message'].toString();

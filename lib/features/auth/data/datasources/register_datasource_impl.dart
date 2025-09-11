@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:findjobs/features/auth/infraestructure/mappers/mappers.dart';
 import 'package:findjobs/features/auth/infraestructure/user_response/user_response_api.dart';
+import 'package:findjobs/features/shared/infrastruture/cache/secure_storage_adapter.dart';
 
 import '../../../../core/core.dart' show HttpClient;
 import '../../../../core/failure.dart';
@@ -10,17 +11,24 @@ import '../../domain/helpers/helpers.dart';
 
 class RegisterDatasourceImpl implements RegisterDatasource {
   final HttpClient _httpClient;
+  final SecureStorageAdapter _secureStorageAdapter;
 
-  RegisterDatasourceImpl(this._httpClient);
+  RegisterDatasourceImpl({
+    required HttpClient httpClient,
+    required SecureStorageAdapter secureStorageAdapter,
+  }) : _httpClient = httpClient,
+       _secureStorageAdapter = secureStorageAdapter;
+
   @override
   Future<Either<Failure, UserEntity>> register(RegisterParams params) {
     return _httpClient.post(
       url: "auth/register",
       data: RemoteRegisterParams.fromDomain(params).toJson(),
-      fromJson:
-          (json) => UserMapper().userModelToEntity(
-            UserResponseAPi.fromJson(json).data.user,
-          ),
+      fromJson: (json) async {
+        final result = UserResponseAPi.fromJson(json).data;
+        _secureStorageAdapter.save(key: 'Token', value: result.token);
+        return UserMapper().userModelToEntity(result.user);
+      },
     );
   }
 }
