@@ -2,13 +2,14 @@ import 'package:findjobs/configs/configs.dart';
 import 'package:findjobs/features/shared/components/custom_text.dart';
 import 'package:findjobs/features/shared/helpers/extensions/sizedbox_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class IntroScreen extends StatelessWidget {
+class IntroScreen extends ConsumerWidget {
   const IntroScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Center(
         child: Padding(
@@ -20,7 +21,8 @@ class IntroScreen extends StatelessWidget {
               CustomText("te.", fontSize: 150),
               Spacer(),
               FilledButton.icon(
-                onPressed: () => {context.push(signUpScreen)},
+                onPressed:
+                    () => {ref.read(appRouterProvider).push(signUpScreen)},
                 label: CustomText("Create an Account"),
                 icon: Icon(Icons.add_circle_outline_outlined),
               ),

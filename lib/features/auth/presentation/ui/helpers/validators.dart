@@ -14,3 +14,8 @@ String? validatePassword(String? password) {
   if (password.length < 6) return "Password must be at least 6 characters";
   return null;
 }
+
+String? validatorGeneral(name) {
+  if (name!.isEmpty) return "Cannot be empty";
+  return null;
+}

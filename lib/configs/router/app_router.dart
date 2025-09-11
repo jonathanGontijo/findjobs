@@ -29,10 +29,7 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const IntroScreen(),
       ),
       GoRoute(path: signInScreen, builder: (context, state) => SigininScreen()),
-      GoRoute(
-        path: signUpScreen,
-        builder: (context, state) => const SignupScreen(),
-      ),
+      GoRoute(path: signUpScreen, builder: (context, state) => SignupScreen()),
       GoRoute(
         path: homeScreen,
         builder: (context, state) => const HomeScreen(),

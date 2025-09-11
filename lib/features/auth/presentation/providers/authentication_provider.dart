@@ -4,11 +4,13 @@ import 'package:findjobs/configs/router/app_router.dart';
 import 'package:findjobs/core/failure.dart';
 import 'package:findjobs/features/auth/domain/entities/entities.dart';
 import 'package:findjobs/features/auth/domain/usecases/login_usecase.dart';
-import 'package:findjobs/features/auth/presentation/providers/login_repository_proivder.dart';
+import 'package:findjobs/features/auth/presentation/providers/login/login_repository_proivder.dart';
+import 'package:findjobs/features/auth/presentation/providers/register/register_repository_provider.dart';
 import 'package:findjobs/features/auth/presentation/ui/helpers/messages.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/helpers/helpers.dart';
+import '../../domain/usecases/usecase.dart';
 
 part 'authentication_provider.g.dart';
 
@@ -52,6 +54,23 @@ class Authentication extends _$Authentication {
     final loginUsecase = LoginUsecase(ref.read(loginRepositoryProvider));
 
     final result = await loginUsecase(params);
+
+    result.fold(
+      (failure) =>
+          MessagesService.showCustomSnackBar(failure.message, error: true),
+      (user) => ref.read(appRouterProvider).push(homeScreen),
+    );
+
+    state = AsyncData(state.value!.copyWith(isLoading: false));
+  }
+
+  Future<void> register(RegisterParams params) async {
+    state = AsyncData(state.value!.copyWith(isLoading: true));
+    final registerUsecase = RegisterUsecase(
+      ref.read(registerRepositoryProvider),
+    );
+
+    final result = await registerUsecase(params);
 
     result.fold(
       (failure) =>

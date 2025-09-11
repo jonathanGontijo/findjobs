@@ -17,24 +17,6 @@ void main() async {
   runApp(ProviderScope(child: const MyApp()));
 
   await Environment.initEnvironment();
-
-  final dio = Dio(BaseOptions(baseUrl: Environment.apiUrl));
-  final httpClient = HttpClientImpl(dio);
-  final remoteDatasource = LoginDatasourceImpl(httpClient);
-  final repository = LoginRepositoryImpl(remoteDatasource);
-  final usecase = LoginUsecase(repository);
-
-  final result = await usecase(
-    AuthenticationParams(
-      email: "eliezer.user@gmail.com",
-      secret: "eliezerF123",
-    ),
-  );
-
-  result.fold(
-    (failure) => log('falha ao logar: ${failure.message}'),
-    (user) => log('Logado com sucesso: ${user.name}'),
-  );
 }
 
 class MyApp extends ConsumerWidget {

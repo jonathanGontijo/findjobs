@@ -4,7 +4,7 @@ import 'package:findjobs/features/auth/presentation/providers/http_client_provid
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/repositories/repositories.dart';
+import '../../../domain/repositories/repositories.dart';
 
 part 'login_repository_proivder.g.dart';
 
