@@ -1,4 +1,3 @@
-import 'package:findjobs/configs/configs.dart';
 import 'package:findjobs/features/auth/domain/helpers/helpers.dart';
 import 'package:findjobs/features/auth/presentation/providers/authentication_provider.dart';
 import 'package:findjobs/features/auth/presentation/ui/helpers/helpers.dart';

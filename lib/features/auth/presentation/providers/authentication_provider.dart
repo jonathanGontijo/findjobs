@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:findjobs/configs/router/app_router.dart';
 import 'package:findjobs/core/failure.dart';
 import 'package:findjobs/features/auth/domain/entities/entities.dart';
-import 'package:findjobs/features/auth/domain/usecases/login_usecase.dart';
+import 'package:findjobs/features/auth/domain/usecases/verify_status_usacase.dart';
+import 'package:findjobs/features/auth/presentation/providers/auth_status/verify_status_repository.dart';
 import 'package:findjobs/features/auth/presentation/providers/login/login_repository_proivder.dart';
 import 'package:findjobs/features/auth/presentation/providers/register/register_repository_provider.dart';
 import 'package:findjobs/features/auth/presentation/ui/helpers/messages.dart';
@@ -56,9 +55,14 @@ class Authentication extends _$Authentication {
     final result = await loginUsecase(params);
 
     result.fold(
-      (failure) =>
-          MessagesService.showCustomSnackBar(failure.message, error: true),
-      (user) => ref.read(appRouterProvider).push(homeScreen),
+      (failure) {
+        MessagesService.showCustomSnackBar(failure.message, error: true);
+        _setAuthStatusWhenError(failure);
+      },
+      (user) {
+        _setAuthStatusWhenSucess(user);
+        ref.read(appRouterProvider).go(homeScreen);
+      },
     );
 
     state = AsyncData(state.value!.copyWith(isLoading: false));
@@ -73,11 +77,64 @@ class Authentication extends _$Authentication {
     final result = await registerUsecase(params);
 
     result.fold(
-      (failure) =>
-          MessagesService.showCustomSnackBar(failure.message, error: true),
-      (user) => ref.read(appRouterProvider).push(homeScreen),
+      (failure) {
+        MessagesService.showCustomSnackBar(failure.message, error: true);
+        _setAuthStatusWhenError(failure);
+      },
+
+      (user) {
+        _setAuthStatusWhenSucess(user);
+        ref.read(appRouterProvider).go(homeScreen);
+      },
     );
 
     state = AsyncData(state.value!.copyWith(isLoading: false));
+  }
+
+  Future<void> verifyStatus() async {
+    state = AsyncData(
+      state.value!.copyWith(isLoading: true, authStatus: AuthStatus.checking),
+    );
+    final verifyStatusUsecase = VerifyStatusUsacase(
+      ref.read(verifyStatusRepositoryProvider),
+    );
+
+    final result = await verifyStatusUsecase();
+
+    result.fold(
+      (failure) {
+        MessagesService.showCustomSnackBar(failure.message, error: true);
+        _setAuthStatusWhenError(failure);
+        ref.read(appRouterProvider).go(introScreen);
+      },
+
+      (user) {
+        _setAuthStatusWhenSucess(user);
+        ref.read(appRouterProvider).go(homeScreen);
+      },
+    );
+
+    state = AsyncData(state.value!.copyWith(isLoading: false));
+  }
+
+  void _setAuthStatusWhenSucess(UserEntity user) {
+    state = AsyncData(
+      state.value!.copyWith(
+        isLoading: false,
+        authStatus: AuthStatus.authenticated,
+        userEntity: user,
+      ),
+    );
+  }
+
+  void _setAuthStatusWhenError(Failure? failure) {
+    state = AsyncData(
+      state.value!.copyWith(
+        isLoading: false,
+        authStatus: AuthStatus.notAuthenticated,
+        userEntity: null,
+        failure: failure,
+      ),
+    );
   }
 }

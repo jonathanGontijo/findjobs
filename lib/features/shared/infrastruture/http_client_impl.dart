@@ -31,43 +31,72 @@ class HttpClientImpl implements HttpClient {
       return Left(Failure(message: "Unexpected error"));
     }
   }
-}
 
-String _mapDioErrorToMessage(DioException e, String? serverMessage) {
-  if (serverMessage?.isNotEmpty == true) {
-    return serverMessage!;
+  @override
+  Future<Either<Failure, T>> get<T>({
+    required String url,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+    required T Function(dynamic json) fromJson,
+  }) async {
+    try {
+      final response = await _dio.get(
+        url,
+        options: Options(headers: headers),
+        queryParameters: queryParameters,
+      );
+
+      log("${response.data}");
+      return Right( fromJson(response.data));
+    } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+      final serverMessage = e.response?.data['message'].toString();
+
+      final errorMessage = _mapDioErrorToMessage(e, serverMessage);
+      log("$errorMessage code: $statusCode");
+      return Left(Failure(message: errorMessage, code: statusCode));
+    } catch (e) {
+      log("$e");
+      return Left(Failure(message: "Unexpected error"));
+    }
   }
 
-  final statusCode = e.response?.statusCode;
+  String _mapDioErrorToMessage(DioException e, String? serverMessage) {
+    if (serverMessage?.isNotEmpty == true) {
+      return serverMessage!;
+    }
 
-  switch (e.type) {
-    case DioExceptionType.connectionTimeout:
-      return "Connection timeout with API server";
-    case DioExceptionType.sendTimeout:
-      return "Send timeout with API server";
-    case DioExceptionType.receiveTimeout:
-      return "Receive timeout with API server";
-    case DioExceptionType.badResponse:
-      if (statusCode == 400) {
-        return "Bad request";
-      } else if (statusCode == 401) {
-        return "Unauthorized";
-      } else if (statusCode == 403) {
-        return "Forbidden";
-      } else if (statusCode == 404) {
-        return "Not found";
-      } else if (statusCode == 500) {
-        return "Internal server error";
-      } else {
-        return "Received invalid status code: $statusCode";
-      }
-    case DioExceptionType.cancel:
-      return "Request to API server was cancelled";
-    case DioExceptionType.connectionError:
-      return "Connection to API server failed due to internet connection";
-    case DioExceptionType.unknown:
-      return "Unexpected error occurred";
-    default:
-      return "Something went wrong";
+    final statusCode = e.response?.statusCode;
+
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+        return "Connection timeout with API server";
+      case DioExceptionType.sendTimeout:
+        return "Send timeout with API server";
+      case DioExceptionType.receiveTimeout:
+        return "Receive timeout with API server";
+      case DioExceptionType.badResponse:
+        if (statusCode == 400) {
+          return "Bad request";
+        } else if (statusCode == 401) {
+          return "Unauthorized";
+        } else if (statusCode == 403) {
+          return "Forbidden";
+        } else if (statusCode == 404) {
+          return "Not found";
+        } else if (statusCode == 500) {
+          return "Internal server error";
+        } else {
+          return "Received invalid status code: $statusCode";
+        }
+      case DioExceptionType.cancel:
+        return "Request to API server was cancelled";
+      case DioExceptionType.connectionError:
+        return "Connection to API server failed due to internet connection";
+      case DioExceptionType.unknown:
+        return "Unexpected error occurred";
+      default:
+        return "Something went wrong";
+    }
   }
 }

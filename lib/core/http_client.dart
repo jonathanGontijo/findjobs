@@ -7,4 +7,11 @@ abstract class HttpClient {
     required Map<String, dynamic> data,
     required Future<T> Function(dynamic json) fromJson,
   });
+
+  Future<Either<Failure, T>> get<T>({
+    required String url,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+    required T Function(dynamic json) fromJson,
+  });
 }
